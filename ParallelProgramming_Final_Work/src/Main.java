@@ -1,17 +1,57 @@
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+class FileProcessingThread extends Thread {
+    private String fileName;
+    private String substring;
+    private List<Integer> occurrenceLines;
+
+    public FileProcessingThread(String fileName, String substring) {
+        this.fileName = fileName;
+        this.substring = substring;
+        this.occurrenceLines = new ArrayList<>();
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Thread " + Thread.currentThread().getId() + " processando arquivo: " + fileName);
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            int lineNumber = 1;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains(substring)) {
+                    occurrenceLines.add(lineNumber);
+                }
+                lineNumber++;
+            }
+        } catch (IOException e) {
+            System.out.println("Erro ao ler o arquivo: " + fileName);
+        }
+
+        System.out.println("Thread " + Thread.currentThread().getId() + " finalizou o processamento do arquivo: " + fileName);
+        if (!occurrenceLines.isEmpty()) {
+            System.out.println("Ocorrências da substring '" + substring + "' no arquivo '" + fileName + "':");
+            for (int line : occurrenceLines) {
+                System.out.println("Linha " + line);
+            }
+        } else {
+            System.out.println("A substring '" + substring + "' não foi encontrada no arquivo '" + fileName + "'.");
+        }
+    }
+}
+
 public class Main {
     public static void main(String[] args) {
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        String[] fileNames = { "C:/Users/ramon/IdeaProjects/ParallelProgramming_Final_Work/src/arquivo1.txt", "C:/Users/ramon/IdeaProjects/ParallelProgramming_Final_Work/src/arquivo2.txt", "C:/Users/ramon/IdeaProjects/ParallelProgramming_Final_Work/src/arquivo3.txt" };
+        String substring = "exemplo";
 
-        // Press Shift+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
-
-            // Press Shift+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
+        for (String fileName : fileNames) {
+            FileProcessingThread thread = new FileProcessingThread(fileName, substring);
+            thread.start();
         }
     }
 }
