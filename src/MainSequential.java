@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -7,16 +8,16 @@ class FileProcessingSequential {
     private String fileName;
     private String substring;
     private List<Integer> occurrenceLines;
-    private int idThreads;
+    private int fileNumber;
     private File file;
     private final String fileExtension;
 
     private int occurrenceCounter = 0;
 
-    public FileProcessingSequential(String fileName, String substring, int idThreads, File file, String fileExtension) {
+    public FileProcessingSequential(String fileName, String substring, int fileNumber, File file, String fileExtension) {
         this.fileName = fileName;
         this.substring = substring;
-        this.idThreads = idThreads;
+        this.fileNumber = fileNumber;
         this.file = file;
         this.occurrenceLines = new ArrayList<>();
         this.fileExtension = fileExtension;
@@ -85,7 +86,7 @@ class FileProcessingSequential {
 
     public void checkOccurrences(){
         int separatorIndex = fileName.lastIndexOf("/");
-        System.out.println("Thread de Id " + idThreads + " executou arquivo " + fileName.substring(separatorIndex + 1));
+        System.out.println("Arquivo número " + (fileNumber+1) + " denominado [" + fileName.substring(separatorIndex + 1)+"] foi executado!");
 
         System.out.println("O arquivo possui " + file.length() + " bytes");
 
@@ -104,7 +105,7 @@ class FileProcessingSequential {
             else{
                 sb.append(" nas seguintes linhas");
             }
-            System.out.println(sb.toString());
+            System.out.println(sb);
             for (int line : occurrenceLines) {
                 System.out.print(line + " ");
             }
@@ -138,12 +139,12 @@ class FileProcessingSequential {
         this.occurrenceLines = occurrenceLines;
     }
 
-    public int getIdThreads() {
-        return idThreads;
+    public int getFileNumber() {
+        return fileNumber;
     }
 
-    public void setIdThreads(int idThreads) {
-        this.idThreads = idThreads;
+    public void setFileNumber(int fileNumber) {
+        this.fileNumber = fileNumber;
     }
 
     public File getFile() {
@@ -197,11 +198,7 @@ class WriteBinaryFileSequential {
     }
 }
 public class MainSequential {
-    public static void main(String[] args) throws InterruptedException {
-        int quantifyFiles = 4;
-        //int t = 0;
-
-        FileProcessingSequential[] files = new FileProcessingSequential[quantifyFiles];
+    public static void main(String[] args) {
 
         /*
         String[] fileNames = {
@@ -215,12 +212,14 @@ public class MainSequential {
         //String path = "C:/Users/gabri/IdeaProjects/ParallelProgramming_Final_Work/src/Arquivos"
 
         //PARA ARQUIVOS TXT
+        /*
         String[] fileNames = {
                 "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/arquivo1.txt",
                 "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/arquivo2.txt",
                 "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/arquivo3.txt",
                 "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/arquivo4.txt"
         };
+        */
 
         //PARA ARQUIVOS BIN
         /*
@@ -249,8 +248,29 @@ public class MainSequential {
         */
 
         Scanner input = new Scanner(System.in);
-        System.out.println("Entre com a palavra a ser procurada: ");
+        System.out.println("Digite a palavra a ser procurada:");
         String substring = input.nextLine();
+
+        System.out.println("Digite o número de arquivos a serem processados:");
+        boolean rightType = false;
+        int quantifyFiles = 0;
+        while(!rightType){
+            try {
+                quantifyFiles = input.nextInt();
+                rightType = true;
+            } catch (InputMismatchException e){
+                System.out.println("Por favor, digite um número inteiro:");
+            }
+        }
+        FileProcessingSequential[] files = new FileProcessingSequential[quantifyFiles];
+
+        String[] fileNames = new String[quantifyFiles];
+        System.out.println("Digite o path completo para o arquivo a ser processado, ou o path do arquivo na pasta Arquivos (src/Arquivos/nomedoarquivo.extensao):");
+        for(int i=0; i<quantifyFiles; i++){
+            System.out.print("Arquivos "+(i+1)+": ");
+            fileNames[i] = input.next();
+        }
+        System.out.println();
         input.close();
 
         long startTime = System.currentTimeMillis();
