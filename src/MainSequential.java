@@ -260,6 +260,7 @@ public class MainSequential {
                 rightType = true;
             } catch (InputMismatchException e){
                 System.out.println("Por favor, digite um número inteiro:");
+                input.next();
             }
         }
         FileProcessingSequential[] files = new FileProcessingSequential[quantifyFiles];

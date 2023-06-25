@@ -262,6 +262,7 @@ public class Main {
                 rightType = true;
             } catch (InputMismatchException e){
                 System.out.println("Por favor, digite um número inteiro:");
+                input.next();
             }
         }
         FileProcessingThread[] threads = new FileProcessingThread[sizeThreads];
