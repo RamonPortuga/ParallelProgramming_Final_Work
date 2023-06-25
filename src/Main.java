@@ -85,7 +85,7 @@ class FileProcessingThread extends Thread {
 
     }
 
-    public void checkOccurrences(){
+    public synchronized void checkOccurrences(){
         int separatorIndex = fileName.lastIndexOf("/");
         System.out.println("Thread de ID " + idThreads + " executou arquivo " + fileName.substring(separatorIndex + 1));
 
