@@ -1,0 +1,47 @@
+
+        /*
+        String[] fileNames = {
+                "C:/Users/Vitória Nazareth/Desktop/COMP_CON/ParallelProgramming_Final_Work/src/Arquivos/arquivo1.txt",
+                "C:/Users/Vitória Nazareth/Desktop/COMP_CON/ParallelProgramming_Final_Work/src/Arquivos/arquivo2.txt",
+                "C:/Users/Vitória Nazareth/Desktop/COMP_CON/ParallelProgramming_Final_Work/src/Arquivos/arquivo3.txt",
+                "C:/Users/Vitória Nazareth/Desktop/COMP_CON/ParallelProgramming_Final_Work/src/Arquivos/arquivo4.txt"
+        };
+        */
+        //String path = "C:/Users/ramon/Documents/UFRJ/ProgConc/TrabalhoFinal/ParallelProgramming_Final_Work/src/Arquivo"
+        //String path = "C:/Users/gabri/IdeaProjects/ParallelProgramming_Final_Work/src/Arquivos"
+
+        //PARA ARQUIVOS TXT
+        /*
+        String[] fileNames = {
+                "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/arquivo1.txt",
+                "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/arquivo2.txt",
+                "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/arquivo3.txt",
+                "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/arquivo4.txt"
+        };
+        */
+
+        //PARA ARQUIVOS BIN
+        /*
+        String[] fileNames = {
+                "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/teste1.bin",
+                "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/teste2.bin",
+                "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/teste3.bin",
+                "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/teste4.bin"
+        };
+         */
+
+        /*
+        String[] fileNames = {
+                "src/Arquivos/arquivo1.txt",
+                "src/Arquivos/arquivo2.txt",
+                "C:/Users/gabri/IdeaProjects/ParallelProgramming_Final_Work/src/Arquivos/arquivo3.txt",
+                "C:/Users/gabri/IdeaProjects/ParallelProgramming_Final_Work/src/Arquivos/arquivo4.txt"
+        };
+        */
+        /*
+        String[] fileNames = {
+                "C:/Users/gabri/IdeaProjects/ParallelProgramming_Final_Work/src/Arquivos/teste1.bin",
+                "C:/Users/gabri/IdeaProjects/ParallelProgramming_Final_Work/src/Arquivos/teste2.bin",
+                "C:/Users/gabri/IdeaProjects/ParallelProgramming_Final_Work/src/Arquivos/teste3.bin"
+        };
+        */
