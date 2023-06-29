@@ -1,4 +1,7 @@
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -11,20 +14,35 @@ class FileProcessingSequential {
     private int fileNumber;
     private File file;
     private final String fileExtension;
-
+    private final List<String> fileContentByLines;
     private int occurrenceCounter = 0;
 
-    public FileProcessingSequential(String fileName, String substring, int fileNumber, File file, String fileExtension) {
+    public FileProcessingSequential(String fileName, String substring, int fileNumber, File file, String fileExtension, List<String> fileContentByLines) {
         this.fileName = fileName;
         this.substring = substring;
         this.fileNumber = fileNumber;
         this.file = file;
         this.occurrenceLines = new ArrayList<>();
         this.fileExtension = fileExtension;
+        this.fileContentByLines = fileContentByLines;
     }
 
     public void executeSearch() {
 
+        //Iterating by line and checking substring presence
+        for (int i = 0; i < fileContentByLines.size(); i += 1) {
+            int index = fileContentByLines.get(i).toLowerCase().indexOf(substring.toLowerCase());
+            while (index != -1) {
+                if (!occurrenceLines.contains(i)) {
+                    occurrenceLines.add(i);
+                }
+                occurrenceCounter++;
+                index = fileContentByLines.get(i).toLowerCase().indexOf(substring.toLowerCase(), index + 1);
+            }
+            //lineNumber = i+1;
+        }
+
+        /*
         if (fileExtension.equals("txt")) {
 
             try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
@@ -81,6 +99,7 @@ class FileProcessingSequential {
                 System.out.println("Erro ao ler o arquivo: " + fileName);
             }
         }
+         */
 
     }
 
@@ -167,7 +186,7 @@ class FileProcessingSequential {
         this.occurrenceCounter = occurrenceCounter;
     }
 }
-
+/*
 class WriteBinaryFileSequential {
 
     public WriteBinaryFileSequential() {}
@@ -197,108 +216,104 @@ class WriteBinaryFileSequential {
 
     }
 }
+ */
 public class MainSequential {
     public static void main(String[] args) {
 
-        /*
-        String[] fileNames = {
-                "C:/Users/Vitória Nazareth/Desktop/COMP_CON/ParallelProgramming_Final_Work/src/Arquivos/arquivo1.txt",
-                "C:/Users/Vitória Nazareth/Desktop/COMP_CON/ParallelProgramming_Final_Work/src/Arquivos/arquivo2.txt",
-                "C:/Users/Vitória Nazareth/Desktop/COMP_CON/ParallelProgramming_Final_Work/src/Arquivos/arquivo3.txt",
-                "C:/Users/Vitória Nazareth/Desktop/COMP_CON/ParallelProgramming_Final_Work/src/Arquivos/arquivo4.txt"
-        };
-        */
-        //String path = "C:/Users/ramon/Documents/UFRJ/ProgConc/TrabalhoFinal/ParallelProgramming_Final_Work/src/Arquivo"
-        //String path = "C:/Users/gabri/IdeaProjects/ParallelProgramming_Final_Work/src/Arquivos"
-
-        //PARA ARQUIVOS TXT
-        /*
-        String[] fileNames = {
-                "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/arquivo1.txt",
-                "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/arquivo2.txt",
-                "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/arquivo3.txt",
-                "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/arquivo4.txt"
-        };
-        */
-
-        //PARA ARQUIVOS BIN
-        /*
-        String[] fileNames = {
-                "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/teste1.bin",
-                "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/teste2.bin",
-                "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/teste3.bin",
-                "C:/Users/ramon/Documents/UFRJ/ProgConc/ParallelProgramming_Final_Work/src/Arquivos/teste4.bin"
-        };
-         */
-
-        /*
-        String[] fileNames = {
-                "C:/Users/gabri/IdeaProjects/ParallelProgramming_Final_Work/src/Arquivos/arquivo1.txt",
-                "C:/Users/gabri/IdeaProjects/ParallelProgramming_Final_Work/src/Arquivos/arquivo2.txt",
-                "C:/Users/gabri/IdeaProjects/ParallelProgramming_Final_Work/src/Arquivos/arquivo3.txt",
-                "C:/Users/gabri/IdeaProjects/ParallelProgramming_Final_Work/src/Arquivos/arquivo4.txt"
-        };
-         */
-        /*
-        String[] fileNames = {
-                "C:/Users/gabri/IdeaProjects/ParallelProgramming_Final_Work/src/Arquivos/teste1.bin",
-                "C:/Users/gabri/IdeaProjects/ParallelProgramming_Final_Work/src/Arquivos/teste2.bin",
-                "C:/Users/gabri/IdeaProjects/ParallelProgramming_Final_Work/src/Arquivos/teste3.bin"
-        };
-        */
-
-        Scanner input = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Digite a palavra a ser procurada:");
-        String substring = input.nextLine();
+        String substring = scanner.nextLine();
 
         System.out.println("Digite o número de arquivos a serem processados:");
         boolean rightType = false;
-        int quantifyFiles = 0;
+        int numberOfFiles = 0;
         while(!rightType){
             try {
-                quantifyFiles = input.nextInt();
+                numberOfFiles = scanner.nextInt();
                 rightType = true;
             } catch (InputMismatchException e){
                 System.out.println("Por favor, digite um número inteiro:");
-                input.next();
+                scanner.next();
             }
         }
-        FileProcessingSequential[] files = new FileProcessingSequential[quantifyFiles];
+        FileProcessingSequential[] files = new FileProcessingSequential[numberOfFiles];
 
-        String[] fileNames = new String[quantifyFiles];
         System.out.println("Digite o path completo para o arquivo a ser processado, ou o path do arquivo na pasta Arquivos (src/Arquivos/nomedoarquivo.extensao):");
+         /*
+        String[] fileNames = new String[quantifyFiles];
         for(int i=0; i<quantifyFiles; i++){
             System.out.print("Arquivos "+(i+1)+": ");
             fileNames[i] = input.next();
         }
         System.out.println();
-        input.close();
+         */
+        String[] fileNames = {"src/Arquivos/arquivo1.txt", "src/Arquivos/arquivo2.txt", "src/Arquivos/arquivo3.txt"};
+        scanner.close();
+
+        long startTimeReading = System.currentTimeMillis();
+        //Pre-processing of target files
+        List<List<String>> fileContentByLines = new ArrayList<>();
+        for (int i = 0; i < numberOfFiles; i++){
+
+            String extension = fileNames[i].substring(fileNames[i].lastIndexOf(".")+1);
+
+            if(extension.equals("bin")) {
+
+                try {
+                    FileInputStream inputStream = new FileInputStream(fileNames[i]);
+                    DataInputStream input = new DataInputStream (inputStream);
+
+                    fileContentByLines.add(List.of(input.readUTF().split("\n")));
+
+                    inputStream.close();
+                    input.close();
+                } catch (IOException e) {
+                    System.out.println("Erro ao ler o arquivo: " + fileNames[i]);
+                }
+
+            } else if (extension.equals("txt")) {
+
+                Path filePath = Paths.get(fileNames[i]);
+                try {
+                    fileContentByLines.add(Files.readAllLines(filePath));
+                } catch (IOException e) {
+                    System.out.println("Erro ao ler o arquivo: " + fileNames[i]);
+                }
+
+            } else fileContentByLines.add(null);
+        }
+        long endTimeReading = System.currentTimeMillis();
+        long durationTimeReading = endTimeReading - startTimeReading;
+        System.out.println("\nO Pre processamento demorou " + durationTimeReading + " ms");
+
 
         long startTime = System.currentTimeMillis();
-
-        for (int i = 0; i < quantifyFiles; i++) {
+        for (int i = 0; i < numberOfFiles; i++) {
             String extension = fileNames[i].substring(fileNames[i].lastIndexOf(".") + 1);
 
             if (extension.equals("txt") || extension.equals("bin")) {
                 File file = new File(fileNames[i]);
-                files[i] = new FileProcessingSequential(fileNames[i], substring, i, file, extension);
+                files[i] = new FileProcessingSequential(fileNames[i], substring, i, file, extension, fileContentByLines.get(i));
             } else {
                 System.out.println("Arquivo do tipo [" + extension + "] sem suporte. Utilize [txt] ou [bin]");
                 System.exit(-1);
             }
         }
 
-        for (int i = 0; i < quantifyFiles; i++) {
+        for (int i = 0; i < numberOfFiles; i++) {
             files[i].executeSearch();
         }
 
-        for (int i = 0; i < quantifyFiles; i++) {
-            files[i].checkOccurrences();
+        for (int i = 0; i < numberOfFiles; i++) {
+            int separatorIndex = files[i].getFileName().lastIndexOf("/");
+            System.out.println("\nO arquivo ["+files[i].getFileName().substring(separatorIndex + 1)
+                        +"] possui "+files[i].getFile().length() + " bytes");
+            //threads[i].checkOccurrences();
         }
 
         long endTime = System.currentTimeMillis();
         long duration = endTime - startTime;
 
-        System.out.println("A busca demorou " + duration + " ms");
+        System.out.println("\nA busca demorou " + duration + " ms");
     }
 }
