@@ -1,0 +1,63 @@
+Teste de Corretude:
+
+Substring alvo --> "espelho"
+
+--> arquivo1.txt
+
+Linha 9 - 1
+Linha 21 - 2
+Linha 34 - 1
+Linha 43 - 4
+Linha 711664 - 1
+
+------------------------
+
+--> arquivo2.txt
+
+Linha 4 - 3
+Linha 27 - 1
+Linha 50 - 1
+Linha 51 - 1
+Linha 320 - 5
+
+-------------------------
+
+--> arquivo3.txt
+
+Linha 188031 - 2
+Linha 188215 - 3
+Linha 188263 - 1
+Linha 493711 - 3
+Linha 493756 - 1
+
+--------------------------
+
+--> arquivo4.txt
+
+Linha 1 - 1
+Linha 4 - 1
+Linha 7 - 2
+Linha 10 - 1
+Linha 11 - 2
+
+---------------------------
+
+--> arquivo5.txt
+
+Linha 1 - 1
+Linha 2 - 1
+Linha 3 - 1
+Linha 4 - 1
+Linha 5 - 1
+
+----------------------------
+
+--> arquivo6.txt
+
+Linha 2 - 1
+Linha 4 - 2
+Linha 6 - 3
+Linha 8 - 2
+Linha 10 - 1
+
+---------------------------

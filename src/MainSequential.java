@@ -2,11 +2,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
+//File Processor Class
 class FileProcessingSequential {
     private String fileName;
     private String substring;
@@ -16,7 +14,10 @@ class FileProcessingSequential {
     private final String fileExtension;
     private final List<String> fileContentByLines;
     private int occurrenceCounter = 0;
+    private final Map<Integer,Integer> occurrencePerLineMap;
+    private int occurrencePerLineCounter = 0;
 
+    //Constructor of File processor
     public FileProcessingSequential(String fileName, String substring, int fileNumber, File file, String fileExtension, List<String> fileContentByLines) {
         this.fileName = fileName;
         this.substring = substring;
@@ -25,11 +26,12 @@ class FileProcessingSequential {
         this.occurrenceLines = new ArrayList<>();
         this.fileExtension = fileExtension;
         this.fileContentByLines = fileContentByLines;
+        this.occurrencePerLineMap = new HashMap<>();
     }
 
+    //Iterating by line and checking substring presence, records total occurrence number and occurrence per line
     public void executeSearch() {
 
-        //Iterating by line and checking substring presence
         for (int i = 0; i < fileContentByLines.size(); i += 1) {
             int index = fileContentByLines.get(i).toLowerCase().indexOf(substring.toLowerCase());
             while (index != -1) {
@@ -37,72 +39,15 @@ class FileProcessingSequential {
                     occurrenceLines.add(i);
                 }
                 occurrenceCounter++;
+                occurrencePerLineCounter++;
                 index = fileContentByLines.get(i).toLowerCase().indexOf(substring.toLowerCase(), index + 1);
             }
-            //lineNumber = i+1;
+            occurrencePerLineMap.put(i, occurrencePerLineCounter);
+            occurrencePerLineCounter=0;
         }
-
-        /*
-        if (fileExtension.equals("txt")) {
-
-            try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-                String line;
-                int lineNumber = 1;
-
-                while ((line = reader.readLine()) != null) {
-                    int index = line.toLowerCase().indexOf(substring.toLowerCase());
-                    while (index != -1) {
-                        if(occurrenceLines.isEmpty()){
-                            occurrenceLines.add(lineNumber);
-                        }
-                        else if (occurrenceLines.get(occurrenceLines.size() - 1) != lineNumber){
-                            occurrenceLines.add(lineNumber);
-                        }
-                        occurrenceCounter++;
-                        index = line.toLowerCase().indexOf(substring.toLowerCase(), index + 1);
-                    }
-                    lineNumber++;
-                }
-            } catch (IOException e) {
-                System.out.println("Erro ao ler o arquivo: " + fileName);
-            }
-        }
-
-        else if (fileExtension.equals("bin")) {
-            try {
-                FileInputStream inputStream = new FileInputStream(fileName);
-                DataInputStream input = new DataInputStream (inputStream);
-
-                String[] fileContentByLines = input.readUTF().split("\n");
-                int lineNumber = 1;
-                for (String fileContentByLine : fileContentByLines) {
-                    int index = fileContentByLine.toLowerCase().indexOf(substring.toLowerCase());
-                    while (index != -1) {
-                        if(occurrenceLines.isEmpty()){
-                            occurrenceLines.add(lineNumber);
-                        }
-                        else if (occurrenceLines.get(occurrenceLines.size() - 1) != lineNumber){
-                            occurrenceLines.add(lineNumber);
-                        }
-                        occurrenceCounter++; // Incrementa o contador de ocorrências
-                        index = fileContentByLine.toLowerCase().indexOf(substring.toLowerCase(), index + 1);
-                    }
-                    lineNumber++;
-                }
-
-                inputStream.close();
-                input.close();
-
-            } catch (FileNotFoundException e) {
-                System.out.println("Erro na procura do arquivo: " + fileName);
-            } catch (IOException e) {
-                System.out.println("Erro ao ler o arquivo: " + fileName);
-            }
-        }
-         */
-
     }
 
+    //Print total occurrences, occurrences per line and byte size
     public void checkOccurrences(){
         int separatorIndex = fileName.lastIndexOf("/");
         System.out.println("Arquivo número " + (fileNumber+1) + " denominado [" + fileName.substring(separatorIndex + 1)+"] foi executado!");
@@ -126,7 +71,7 @@ class FileProcessingSequential {
             }
             System.out.println(sb);
             for (int line : occurrenceLines) {
-                System.out.print(line + " ");
+                System.out.println("Linha "+(line+1) + ": "+occurrencePerLineMap.get(line)+" ocorrências.");
             }
         } else {
             System.out.println("A substring '" + substring + "' não foi encontrada no arquivo '" + fileName.substring(separatorIndex + 1) + "'.");
@@ -186,6 +131,8 @@ class FileProcessingSequential {
         this.occurrenceCounter = occurrenceCounter;
     }
 }
+
+//Class used to make bin files for testing
 /*
 class WriteBinaryFileSequential {
 
@@ -217,20 +164,22 @@ class WriteBinaryFileSequential {
     }
 }
  */
+
+//Main Class
 public class MainSequential {
     public static void main(String[] args) {
 
+        //User insert necessary values: substring to search, number of files, thread per file, paths
         Scanner scanner = new Scanner(System.in);
         System.out.println("Digite a palavra a ser procurada:");
         String substring = scanner.nextLine();
 
         System.out.println("Digite o número de arquivos a serem processados:");
-        boolean rightType = false;
-        int numberOfFiles = 0;
-        while(!rightType){
+        int numberOfFiles;
+        while(true){
             try {
                 numberOfFiles = scanner.nextInt();
-                rightType = true;
+                break;
             } catch (InputMismatchException e){
                 System.out.println("Por favor, digite um número inteiro:");
                 scanner.next();
@@ -239,19 +188,26 @@ public class MainSequential {
         FileProcessingSequential[] files = new FileProcessingSequential[numberOfFiles];
 
         System.out.println("Digite o path completo para o arquivo a ser processado, ou o path do arquivo na pasta Arquivos (src/Arquivos/nomedoarquivo.extensao):");
-         /*
-        String[] fileNames = new String[quantifyFiles];
-        for(int i=0; i<quantifyFiles; i++){
+
+        String[] fileNames = new String[numberOfFiles];
+        for(int i=0; i<numberOfFiles; i++){
             System.out.print("Arquivos "+(i+1)+": ");
-            fileNames[i] = input.next();
+            fileNames[i] = scanner.next();
         }
         System.out.println();
-         */
-        String[] fileNames = {"src/Arquivos/arquivo1.txt", "src/Arquivos/arquivo2.txt", "src/Arquivos/arquivo3.txt"};
-        scanner.close();
 
+        /*
+        String[] fileNames = {  "src/Arquivos/arquivo1.txt",
+                                "src/Arquivos/arquivo2.txt",
+                                "src/Arquivos/arquivo3.txt",
+                                "src/Arquivos/arquivo4.txt",
+                                "src/Arquivos/arquivo5.txt",
+                                "src/Arquivos/arquivo6.txt"};
+        scanner.close();
+        */
+
+        //Pre-processing of target files with extension check
         long startTimeReading = System.currentTimeMillis();
-        //Pre-processing of target files
         List<List<String>> fileContentByLines = new ArrayList<>();
         for (int i = 0; i < numberOfFiles; i++){
 
@@ -284,10 +240,10 @@ public class MainSequential {
         }
         long endTimeReading = System.currentTimeMillis();
         long durationTimeReading = endTimeReading - startTimeReading;
-        System.out.println("\nO Pre processamento demorou " + durationTimeReading + " ms");
+        System.out.println("\nO pré processamento demorou " + durationTimeReading + " ms");
 
-
-        long startTime = System.currentTimeMillis();
+        //Create file processing objects with extension check, ending the program in case of failure
+        long startTimeProcessing = System.currentTimeMillis();
         for (int i = 0; i < numberOfFiles; i++) {
             String extension = fileNames[i].substring(fileNames[i].lastIndexOf(".") + 1);
 
@@ -300,20 +256,24 @@ public class MainSequential {
             }
         }
 
+        //Search files for occurrences of substring
         for (int i = 0; i < numberOfFiles; i++) {
             files[i].executeSearch();
         }
 
+        long endTimeProcessing = System.currentTimeMillis();
+        long durationTimeProcessing = endTimeProcessing - startTimeProcessing;
+        System.out.println("\nA busca demorou " + durationTimeProcessing + " ms");
+
+        System.out.println("O tempo de execução total foi "+(durationTimeProcessing+durationTimeReading)+" ms");
+
+        //Prints search results of each file once
         for (int i = 0; i < numberOfFiles; i++) {
             int separatorIndex = files[i].getFileName().lastIndexOf("/");
             System.out.println("\nO arquivo ["+files[i].getFileName().substring(separatorIndex + 1)
                         +"] possui "+files[i].getFile().length() + " bytes");
-            //threads[i].checkOccurrences();
+            files[i].checkOccurrences();
         }
 
-        long endTime = System.currentTimeMillis();
-        long duration = endTime - startTime;
-
-        System.out.println("\nA busca demorou " + duration + " ms");
     }
 }
